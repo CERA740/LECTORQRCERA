@@ -1,17 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lector QR WebApp</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lector QR CERA</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 2em; }
+  #output { white-space: pre-wrap; font-size: 1.2em; background: #f0f0f0; padding: 1em; border-radius: 8px; }
+</style>
 </head>
 <body>
-  <h1>Escanear QR</h1>
-  <div id="reader"></div>
-  <div id="resultado"></div>
+<h1>Datos escaneados</h1>
+<div id="output">Cargando...</div>
 
-  <script src="https://unpkg.com/html5-qrcode"></script>
-  <script src="app.js"></script>
+<script>
+// Función para obtener parámetros URL
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+function decodeData(data) {
+  try {
+    // Decodifica URI y reemplaza caracteres especiales
+    return decodeURIComponent(data);
+  } catch (e) {
+    return data;
+  }
+}
+
+window.onload = () => {
+  const dataParam = getQueryParam('data');
+  const outputDiv = document.getElementById('output');
+
+  if (dataParam) {
+    const decodedText = decodeData(dataParam);
+
+    // Opcional: formatear la salida, por ejemplo reemplazar "|" por saltos de línea
+    const formattedText = decodedText.replace(/\|/g, '\n');
+
+    outputDiv.textContent = formattedText;
+  } else {
+    outputDiv.textContent = "No se encontró ningún dato para mostrar.";
+  }
+};
+</script>
+
 </body>
 </html>
