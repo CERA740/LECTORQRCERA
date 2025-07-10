@@ -15,19 +15,32 @@ function mostrarDatos(textoPlano) {
   document.getElementById("resultado").innerHTML = html;
 }
 
-// Inicializar el lector QR
-const html5QrCode = new Html5Qrcode("reader");
+function leerParametroURL(nombre) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(nombre);
+}
 
-html5QrCode.start(
-  { facingMode: "environment" }, // cámara trasera
-  { fps: 10, qrbox: { width: 250, height: 250 } },
-  (decodedText) => {
-    html5QrCode.stop(); // Detener una vez leído
-    mostrarDatos(decodedText);
-  },
-  (errorMessage) => {
-    // Omitir errores de lectura momentáneos
-  }
-).catch(err => {
-  document.getElementById("resultado").innerHTML = "<p>Error al iniciar la cámara.</p>";
-});
+const dataEnURL = leerParametroURL("data");
+
+if (dataEnURL) {
+  // Decodificar si está codificado
+  const textoDecodificado = decodeURIComponent(dataEnURL);
+  mostrarDatos(textoDecodificado);
+} else {
+  // Si no vino por parámetro, activar el lector QR
+  const html5QrCode = new Html5Qrcode("reader");
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    (decodedText) => {
+      html5QrCode.stop();
+      mostrarDatos(decodedText);
+    },
+    (errorMessage) => {
+      // errores ignorados
+    }
+  ).catch(err => {
+    document.getElementById("resultado").innerHTML = "<p>Error al iniciar la cámara.</p>";
+  });
+}
