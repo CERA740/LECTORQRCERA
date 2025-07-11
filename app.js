@@ -13,6 +13,9 @@ function mostrarDatos(textoPlano) {
     const [clave, valor] = linea.split(/:|=/); // soporta "clave: valor" o "clave=valor"
     if (clave && valor) {
       html += `<p><strong>${clave.trim()}:</strong> ${valor.trim()}</p>`;
+    } else if (linea.trim().match(/^\d{1,2}:\d{2}\s*Hs$/i)) {
+      // Si la línea es solo hora con "Hs", mostramos con texto fijo
+      html += `<p><strong>Hora:</strong> ${linea.trim()}</p>`;
     } else {
       html += `<p>${linea}</p>`; // Línea suelta
     }
