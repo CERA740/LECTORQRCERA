@@ -2,6 +2,13 @@ function mostrarDatos(textoPlano) {
   const lineas = textoPlano.split(/\n|\r/).filter(l => l.trim() !== '');
   let html = `<div class="card">`;
 
+  // Logo centrado arriba
+  html += `
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" class="logo" />
+    </div>
+  `;
+
   lineas.forEach(linea => {
     const [clave, valor] = linea.split(/:|=/); // soporta "clave: valor" o "clave=valor"
     if (clave && valor) {
