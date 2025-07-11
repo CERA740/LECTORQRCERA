@@ -1,44 +1,25 @@
 function mostrarDatos(textoPlano) {
-  const partes = textoPlano.split('|').map(p => p.trim()).filter(p => p !== '');
-  let html = `
-    <div class="card">
-      <h2>Información del Código QR</h2>
-      <ul>
-  `;
+  const lineas = textoPlano.split(/\n|\r|\|/).filter(l => l.trim() !== '');
+  let htmlFecha = '';
+  let htmlCampos = `<div class="card">`;
 
-  partes.forEach(parte => {
-    html += `<li>${parte}</li>`;
-  });
+  lineas.forEach(linea => {
+    const [clave, valor] = linea.split(/:|=/); // soporta "clave: valor" o "clave=valor"
 
-  html += `
-      </ul>
-    </div>
-  `;
+    if (clave && valor) {
+      const claveLimpia = clave.trim().toUpperCase();
 
-  document.getElementById("resultado").innerHTML = html;
-}
-
-const dataEnURL = leerParametroURL("data");
-
-if (dataEnURL) {
-  // Decodificar si está codificado
-  const textoDecodificado = decodeURIComponent(dataEnURL);
-  mostrarDatos(textoDecodificado);
-} else {
-  // Si no vino por parámetro, activar el lector QR
-  const html5QrCode = new Html5Qrcode("reader");
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (decodedText) => {
-      html5QrCode.stop();
-      mostrarDatos(decodedText);
-    },
-    (errorMessage) => {
-      // errores ignorados
+      if (claveLimpia.includes("FECHA DE GENERACIÓN")) {
+        htmlFecha = `<div class="fecha-generacion"><strong>${clave.trim()}:</strong> ${valor.trim()}</div>`;
+      } else {
+        htmlCampos += `<p><strong>${clave.trim()}:</strong> ${valor.trim()}</p>`;
+      }
+    } else {
+      htmlCampos += `<p>${linea}</p>`;
     }
-  ).catch(err => {
-    document.getElementById("resultado").innerHTML = "<p>Error al iniciar la cámara.</p>";
   });
+
+  htmlCampos += `</div>`;
+
+  document.getElementById("resultado").innerHTML = htmlFecha + htmlCampos;
 }
