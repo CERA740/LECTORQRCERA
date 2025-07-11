@@ -1,23 +1,12 @@
 function mostrarDatos(textoPlano) {
-  const partes = textoPlano.split('|').map(p => p.trim());
-  let html = `<div class="card">`;
+  const partes = textoPlano.split('|').map(p => p.trim()).filter(p => p !== '');
+  let html = `<div class="card"><ul>`;
 
-  if (partes.length >= 7) {
-    html += `<p><strong>EXPORTADOR:</strong> ${partes[0].replace('EXPORTADOR', '').trim()}</p>`;
-    html += `<p><strong>DESPACHANTE:</strong> ${partes[1].replace('DESPACHANTE', '').trim()}</p>`;
-    html += `<p><strong>CANTIDAD:</strong> ${partes[2].replace('CANTIDAD', '').trim()}</p>`;
-    html += `<p><strong>HORA INGRESO:</strong> ${partes[3]}</p>`;
-    html += `<p><strong>RECIBIDO POR:</strong> ${partes[4].replace('RECIBIDO POR', '').trim()}</p>`;
-    html += `<p><strong>RETIRA DÍA:</strong> ${partes[5].replace('RETIRA DIA', '').trim()}</p>`;
-    html += `<p><strong>HORARIO RETIRO:</strong> ${partes[6]}</p>`;
-  } else {
-    // Si el formato no es estándar, mostrar plano
-    partes.forEach(p => {
-      html += `<p>${p}</p>`;
-    });
-  }
+  partes.forEach(parte => {
+    html += `<li>${parte}</li>`;
+  });
 
-  html += `</div>`;
+  html += `</ul></div>`;
   document.getElementById("resultado").innerHTML = html;
 }
 
