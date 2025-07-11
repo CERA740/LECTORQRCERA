@@ -1,50 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Lector QR CERA</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 2em; }
-  #output { white-space: pre-wrap; font-size: 1.2em; background: #f0f0f0; padding: 1em; border-radius: 8px; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lector QR - CERA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    .logo img {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+    .output div {
+      margin: 8px 0;
+      text-align: left;
+    }
+    .output strong {
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-<h1>Datos escaneados</h1>
-<div id="output">Cargando...</div>
+  <div class="container">
+    <div class="logo">
+      <img src="logo.png" alt="Logo" />
+    </div>
+    <div id="output" class="output">
+      Esperando escaneo...
+    </div>
+  </div>
 
-<script>
-// Función para obtener parámetros URL
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
+  <script>
+    // Simula lectura automática del parámetro 'data'
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const rawData = params.get("data");
+      if (rawData) {
+        const decoded = decodeURIComponent(rawData);
+        showData(decoded);
+      }
+    };
 
-function decodeData(data) {
-  try {
-    // Decodifica URI y reemplaza caracteres especiales
-    return decodeURIComponent(data);
-  } catch (e) {
-    return data;
-  }
-}
-
-window.onload = () => {
-  const dataParam = getQueryParam('data');
-  const outputDiv = document.getElementById('output');
-
-  if (dataParam) {
-    const decodedText = decodeData(dataParam);
-
-    // Opcional: formatear la salida, por ejemplo reemplazar "|" por saltos de línea
-    const formattedText = decodedText.replace(/\|/g, '\n');
-
-    outputDiv.textContent = formattedText;
-  } else {
-    outputDiv.textContent = "No se encontró ningún dato para mostrar.";
-  }
-};
-</script>
-
+    function showData(text) {
+      const parts = text.split(" | ");
+      const labels = [
+        "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
+        "HORA", "RECIBIDO POR", "RETIRA DIA", "RETIRA HORA"
+      ];
+      const outputDiv = document.getElementById("output");
+      let html = "";
+      for (let i = 0; i < parts.length; i++) {
+        const value = parts[i].substring(parts[i].indexOf(" ") + 1);
+        html += `<div><strong>${labels[i]}:</strong> ${value}</div>`;
+      }
+      outputDiv.innerHTML = html;
+    }
+  </script>
 </body>
 </html>
