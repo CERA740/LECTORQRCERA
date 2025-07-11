@@ -1,12 +1,20 @@
 function mostrarDatos(textoPlano) {
   const partes = textoPlano.split('|').map(p => p.trim()).filter(p => p !== '');
-  let html = `<div class="card"><ul>`;
+  let html = `
+    <div class="card">
+      <h2>Información del Código QR</h2>
+      <ul>
+  `;
 
   partes.forEach(parte => {
     html += `<li>${parte}</li>`;
   });
 
-  html += `</ul></div>`;
+  html += `
+      </ul>
+    </div>
+  `;
+
   document.getElementById("resultado").innerHTML = html;
 }
 
