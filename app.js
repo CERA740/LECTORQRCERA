@@ -1,30 +1,21 @@
 function mostrarDatos(textoPlano) {
-  const lineas = textoPlano.split(/\n|\r/).filter(l => l.trim() !== '');
+  const partes = textoPlano.split('|').map(p => p.trim());
   let html = `<div class="card">`;
 
-  lineas.forEach(linea => {
-    let clave = '';
-    let valor = '';
-
-    // Intentar detectar separación por ":"
-    if (linea.includes(':')) {
-      const idx = linea.indexOf(':');
-      clave = linea.substring(0, idx).trim();
-      valor = linea.substring(idx + 1).trim();
-    } else if (linea.includes('=')) {
-      const idx = linea.indexOf('=');
-      clave = linea.substring(0, idx).trim();
-      valor = linea.substring(idx + 1).trim();
-    } else {
-      // Si no tiene separador, mostrar línea completa como está
-      html += `<p>${linea}</p>`;
-      return;
-    }
-
-    if (valor !== '') {
-      html += `<p><strong>${clave}:</strong> ${valor}</p>`;
-    }
-  });
+  if (partes.length >= 7) {
+    html += `<p><strong>EXPORTADOR:</strong> ${partes[0].replace('EXPORTADOR', '').trim()}</p>`;
+    html += `<p><strong>DESPACHANTE:</strong> ${partes[1].replace('DESPACHANTE', '').trim()}</p>`;
+    html += `<p><strong>CANTIDAD:</strong> ${partes[2].replace('CANTIDAD', '').trim()}</p>`;
+    html += `<p><strong>HORA INGRESO:</strong> ${partes[3]}</p>`;
+    html += `<p><strong>RECIBIDO POR:</strong> ${partes[4].replace('RECIBIDO POR', '').trim()}</p>`;
+    html += `<p><strong>RETIRA DÍA:</strong> ${partes[5].replace('RETIRA DIA', '').trim()}</p>`;
+    html += `<p><strong>HORARIO RETIRO:</strong> ${partes[6]}</p>`;
+  } else {
+    // Si el formato no es estándar, mostrar plano
+    partes.forEach(p => {
+      html += `<p>${p}</p>`;
+    });
+  }
 
   html += `</div>`;
   document.getElementById("resultado").innerHTML = html;
