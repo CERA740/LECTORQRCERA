@@ -3,29 +3,33 @@ function mostrarDatos(textoPlano) {
   let html = `<div class="card">`;
 
   lineas.forEach(linea => {
-    const [clave, valor] = linea.split(/:|=/); // soporta "clave: valor" o "clave=valor"
-    if (clave && valor) {
-      const claveTrim = clave.trim();
-      const valorTrim = valor.trim();
+    const partes = linea.split(/:|=/);
+    if (partes.length >= 2) {
+      const clave = partes[0].trim();
+      const valor = partes.slice(1).join(':').trim(); // Para valores con ":" internos
 
-      // Si el valor termina en "Hs", poner "Hora:" en la clave
-      if (valorTrim.endsWith("Hs")) {
-        html += `<p><strong>Hora:</strong> ${valorTrim}</p>`;
+      // Detectar si el valor es una hora con 'Hs' al final
+      if (/^\d{1,2}:\d{2}\s*Hs$/i.test(valor)) {
+        html += `<p><strong>Hora:</strong> ${valor}</p>`;
       } else {
-        html += `<p><strong>${claveTrim}:</strong> ${valorTrim}</p>`;
+        html += `<p><strong>${clave}:</strong> ${valor}</p>`;
       }
     } else {
-      html += `<p>${linea}</p>`; // Línea suelta sin separador
+      // No tiene separador, intentar detectar si es una hora
+      const texto = linea.trim();
+      if (/^\d{1,2}:\d{2}\s*Hs$/i.test(texto)) {
+        html += `<p><strong>Hora:</strong> ${texto}</p>`;
+      } else if (texto.toUpperCase() === 'HS') {
+        // No mostrar sólo 'Hs' suelto
+      } else {
+        // Texto normal sin clave ni valor
+        html += `<p>${texto}</p>`;
+      }
     }
   });
 
   html += `</div>`;
   document.getElementById("resultado").innerHTML = html;
-}
-
-function leerParametroURL(nombre) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(nombre);
 }
 
 const dataEnURL = leerParametroURL("data");
