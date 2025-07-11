@@ -2,22 +2,20 @@ function mostrarDatos(textoPlano) {
   const lineas = textoPlano.split(/\n|\r/).filter(l => l.trim() !== '');
   let html = `<div class="card">`;
 
-  // Logo centrado arriba
-  html += `
-    <div class="logo-container">
-      <img src="logo.png" alt="Logo" class="logo" />
-    </div>
-  `;
-
   lineas.forEach(linea => {
     const [clave, valor] = linea.split(/:|=/); // soporta "clave: valor" o "clave=valor"
     if (clave && valor) {
-      html += `<p><strong>${clave.trim()}:</strong> ${valor.trim()}</p>`;
-    } else if (linea.trim().match(/^\d{1,2}:\d{2}\s*Hs$/i)) {
-      // Si la línea es solo hora con "Hs", mostramos con texto fijo
-      html += `<p><strong>Hora:</strong> ${linea.trim()}</p>`;
+      const claveTrim = clave.trim();
+      const valorTrim = valor.trim();
+
+      // Si el valor termina en "Hs", poner "Hora:" en la clave
+      if (valorTrim.endsWith("Hs")) {
+        html += `<p><strong>Hora:</strong> ${valorTrim}</p>`;
+      } else {
+        html += `<p><strong>${claveTrim}:</strong> ${valorTrim}</p>`;
+      }
     } else {
-      html += `<p>${linea}</p>`; // Línea suelta
+      html += `<p>${linea}</p>`; // Línea suelta sin separador
     }
   });
 
