@@ -33,3 +33,14 @@ p {
 p strong {
   color: #007acc;
 }
+.fecha-generacion {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #2b4f81;
+  margin-bottom: 15px;
+  text-align: center;
+  background-color: #e3efff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
