@@ -54,41 +54,45 @@
     };
 
     function showData(text) {
-  let parts = text.split(" | ").map(p => p.trim());
+  let parts = text.split(" | ").map(p => p.trim()).filter(p => p !== "");
 
-  // Eliminar duplicado de ID si aparece más de una vez
+  // Eliminar duplicado de ID si hay más de uno que empieza con ID:
   const idIndices = parts.reduce((acc, val, idx) => {
     if (val.toUpperCase().startsWith("ID:")) acc.push(idx);
     return acc;
   }, []);
   if (idIndices.length > 1) {
-    parts.splice(idIndices[1], 1); // elimina segundo ID duplicado
+    parts.splice(idIndices[1], 1); // elimina segundo "ID: ..."
   }
 
-  // Quitar "ID:" del valor para mostrar solo el número
+  // Reemplazar "ID: 13" por solo "13"
   parts = parts.map(p => {
     if (p.toUpperCase().startsWith("ID:")) {
-      return p.split(":")[1].trim(); // deja solo el número
+      return p.split(":")[1].trim();
     }
     return p;
   });
 
+  // Determinar si es QR inicial (8 o 9 campos) o QR de retiro (10 campos)
   let labels = [];
-
   if (parts.length === 10) {
     labels = [
       "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
       "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO",
       "RETIRADO POR", "ID CERA", "FECHA RETIRO"
     ];
+  } else if (parts.length === 9) {
+    labels = [
+      "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
+      "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO",
+      "ID CERA", "FECHA RETIRO"
+    ];
   } else {
     labels = [
       "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
-      "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO"
+      "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO",
+      "ID CERA"
     ];
-    if (parts.length === 8) {
-      labels.push("ID CERA");
-    }
   }
 
   const outputDiv = document.getElementById("output");
