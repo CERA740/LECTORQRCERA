@@ -63,7 +63,7 @@
       const outputDiv = document.getElementById("output");
       let html = "";
       for (let i = 0; i < parts.length; i++) {
-        const value = parts[i].trim();
+        const value = parts[i].trim().toUpperCase();
         const label = labels[i] || "CAMPO DESCONOCIDO";
         html += `<div><strong>${label}:</strong> ${value}</div>`;
       }
