@@ -55,12 +55,11 @@
 
     function showData(text) {
   let parts = text.split(" | ").map(p => p.trim());
-  
-  // Detección por cantidad de campos
+
   let labels = [];
 
-  if (parts.length === 10) {
-    // QR de retiro → posible campo duplicado "ID:"
+  if (parts.length >= 9) {
+    // QR de retiro (10 campos o más, con posible duplicado)
     const idIndices = parts.reduce((acc, val, idx) => {
       if (val.toUpperCase().startsWith("ID:")) acc.push(idx);
       return acc;
@@ -75,11 +74,14 @@
       "RETIRADO POR", "ID CERA", "FECHA RETIRO"
     ];
   } else {
-    // QR inicial (7 campos)
+    // QR inicial: 7 u 8 campos (si el ID va como "ID: 13")
     labels = [
       "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
       "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO"
     ];
+    if (parts.length === 8 && parts[7].toUpperCase().startsWith("ID:")) {
+      labels.push("ID CERA"); // Agrega etiqueta si hay un ID como campo extra
+    }
   }
 
   const outputDiv = document.getElementById("output");
