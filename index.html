@@ -56,21 +56,32 @@
     function showData(text) {
   let parts = text.split(" | ").map(p => p.trim());
   
-  // Elimina el segundo campo con "ID:" si ya hay uno antes
-  const idIndices = parts.reduce((acc, val, idx) => {
-    if (val.toUpperCase().startsWith("ID:")) acc.push(idx);
-    return acc;
-  }, []);
-  if (idIndices.length > 1) {
-    parts.splice(idIndices[1], 1); // elimina el segundo ID
+  // Detección por cantidad de campos
+  let labels = [];
+
+  if (parts.length === 10) {
+    // QR de retiro → posible campo duplicado "ID:"
+    const idIndices = parts.reduce((acc, val, idx) => {
+      if (val.toUpperCase().startsWith("ID:")) acc.push(idx);
+      return acc;
+    }, []);
+    if (idIndices.length > 1) {
+      parts.splice(idIndices[1], 1); // Elimina segundo ID duplicado
+    }
+
+    labels = [
+      "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
+      "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO",
+      "RETIRADO POR", "ID CERA", "FECHA RETIRO"
+    ];
+  } else {
+    // QR inicial (7 campos)
+    labels = [
+      "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
+      "HORA", "RECIBIDO POR", "RETIRA DÍA", "HORARIO PACTADO"
+    ];
   }
 
-  const labels = [
-    "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
-    "HORA", "RECIBIDO POR", "RETIRA DIA", "HORARIO PACTADO",
-    "RETIRADO POR", "ID CERA", "FECHA RETIRO"
-  ];
-  
   const outputDiv = document.getElementById("output");
   let html = "";
   for (let i = 0; i < parts.length; i++) {
@@ -80,7 +91,7 @@
   }
   outputDiv.innerHTML = html;
 }
-      
+    
   </script>
 </body>
 </html>
