@@ -57,13 +57,15 @@
       const parts = text.split(" | ");
       const labels = [
         "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
-        "HORA", "RECIBIDO POR", "RETIRA DIA", "RETIRA HORA"
+        "HORA", "RECIBIDO POR", "RETIRA DIA", "RETIRA HORA",
+        "RETIRADO POR", "ID", "FECHA RETIRO"
       ];
       const outputDiv = document.getElementById("output");
       let html = "";
       for (let i = 0; i < parts.length; i++) {
         const value = parts[i].substring(parts[i].indexOf(" ") + 1);
-        html += `<div><strong>${labels[i]}:</strong> ${value}</div>`;
+        const label = labels[i] || "CAMPO DESCONOCIDO";
+        html += `<div><strong>${label}:</strong> ${value}</div>`;
       }
       outputDiv.innerHTML = html;
     }
