@@ -54,21 +54,33 @@
     };
 
     function showData(text) {
-      const parts = text.split(" | ");
-      const labels = [
-        "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
-        "HORA", "RECIBIDO POR", "RETIRA DIA", "HORARIO PACTADO",
-        "RETIRADO POR", "ID CERA", "FECHA RETIRO"
-      ];
-      const outputDiv = document.getElementById("output");
-      let html = "";
-      for (let i = 0; i < parts.length; i++) {
-        const value = parts[i].trim().toUpperCase();
-        const label = labels[i] || "CAMPO DESCONOCIDO";
-        html += `<div><strong>${label}:</strong> ${value}</div>`;
-      }
-      outputDiv.innerHTML = html;
-    }
+  let parts = text.split(" | ").map(p => p.trim());
+  
+  // Elimina el segundo campo con "ID:" si ya hay uno antes
+  const idIndices = parts.reduce((acc, val, idx) => {
+    if (val.toUpperCase().startsWith("ID:")) acc.push(idx);
+    return acc;
+  }, []);
+  if (idIndices.length > 1) {
+    parts.splice(idIndices[1], 1); // elimina el segundo ID
+  }
+
+  const labels = [
+    "EXPORTADOR", "DESPACHANTE", "CANTIDAD",
+    "HORA", "RECIBIDO POR", "RETIRA DIA", "HORARIO PACTADO",
+    "RETIRADO POR", "ID CERA", "FECHA RETIRO"
+  ];
+  
+  const outputDiv = document.getElementById("output");
+  let html = "";
+  for (let i = 0; i < parts.length; i++) {
+    const value = parts[i].toUpperCase();
+    const label = labels[i] || "CAMPO DESCONOCIDO";
+    html += `<div><strong>${label}:</strong> ${value}</div>`;
+  }
+  outputDiv.innerHTML = html;
+}
+      
   </script>
 </body>
 </html>
